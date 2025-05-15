@@ -6,6 +6,7 @@ This repository is ported from [FFMPEGMedia](https://github.com/bakjos/FFMPEGMed
 
 ## Features:
 
+* Support Linux
 * Works on Linux Windows Mac Andriod
 * Support Unreal Engine 5
 * Support for hardware accelerated codecs
@@ -20,3 +21,4 @@ This repository is ported from [FFMPEGMedia](https://github.com/bakjos/FFMPEGMed
    > Do not forget to run UE5's `Generate Project Files` to account for these changes!
    >
 4. Choose Media Player use FFMPEG Decoder
+<img width="1823" alt="企业微信截图_1747294786630" src="https://github.com/user-attachments/assets/604ebeb4-a356-4476-91d2-c073671473af" />
