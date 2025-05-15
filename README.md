@@ -6,9 +6,9 @@ This repository is ported from [FFMPEGMedia](https://github.com/bakjos/FFMPEGMed
 
 ## Features:
 
-* Support Linux
+* Support for Linux
 * Works on Linux Windows Mac Andriod
-* Support Unreal Engine 5
+* Support for Unreal Engine 5
 * Support for hardware accelerated codecs
 * Support for videos with alpha
 
