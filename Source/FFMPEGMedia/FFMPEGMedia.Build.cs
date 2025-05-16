@@ -114,10 +114,10 @@ public class FFMPEGMedia : ModuleRules
           	string LibrariesPath =Path.Combine(Path.Combine(ThirdPartyPath, "ffmpeg", "lib"), "linux");
 			string[] libs = Directory.GetFiles(LibrariesPath, "*", SearchOption.TopDirectoryOnly);
 			foreach (string lib in libs)
-              {
-                   PublicAdditionalLibraries.Add(lib);
-				   RuntimeDependencies.Add(lib);
-              }
+            {
+                PublicAdditionalLibraries.Add(lib);
+				RuntimeDependencies.Add(lib);
+            }
 
 		}
 
