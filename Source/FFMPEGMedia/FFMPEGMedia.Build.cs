@@ -112,12 +112,17 @@ public class FFMPEGMedia : ModuleRules
 			isLibrarySupported = true;
           
           	string LibrariesPath =Path.Combine(Path.Combine(ThirdPartyPath, "ffmpeg", "lib"), "linux");
-			string[] libs = Directory.GetFiles(LibrariesPath, "*", SearchOption.TopDirectoryOnly);
-			foreach (string lib in libs)
-            {
-                PublicAdditionalLibraries.Add(lib);
-				RuntimeDependencies.Add(lib);
-            }
+		string[] libs = Directory.GetFiles(LibrariesPath, "*.so", SearchOption.TopDirectoryOnly);
+		foreach (string lib in libs)
+		{
+			PublicAdditionalLibraries.Add(lib);
+			
+		}
+		string[] runlibs = Directory.GetFiles(LibrariesPath, "*", SearchOption.TopDirectoryOnly);
+		foreach (string lib in runlibs)
+		{
+			RuntimeDependencies.Add(lib);
+		}
 
 		}
 
