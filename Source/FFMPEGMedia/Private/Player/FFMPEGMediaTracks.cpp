@@ -1078,10 +1078,14 @@ EMediaStatus FFFMPEGMediaTracks::GetStatus() const
 TRangeSet<float> FFFMPEGMediaTracks::GetSupportedRates(EMediaRateThinning Thinning) const {
 	TRangeSet<float> Result;
 
-	//Result.Add(TRange<float>(PlayerItem.canPlayFastReverse ? -8.0f : -1.0f, 0.0f));
-	//Result.Add(TRange<float>(0.0f, PlayerItem.canPlayFastForward ? 8.0f : 0.0f));
-
-	Result.Add(TRange<float>(0.0f, 1.0f));
+	if (Thinning == EMediaRateThinning::Thinned)
+	{
+		Result.Add(TRange<float>::Inclusive(0.0f, 10.0f));
+	}
+	else
+	{
+		Result.Add(TRange<float>::Inclusive(0.0f, 1.0f));
+	}
 
 	return Result;
 }
