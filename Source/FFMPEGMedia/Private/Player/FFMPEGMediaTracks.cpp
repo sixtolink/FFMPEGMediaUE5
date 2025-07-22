@@ -2747,7 +2747,7 @@ int FFFMPEGMediaTracks::GetVideoFrame(AVFrame* frame) {
 	if (got_picture) {
 		if (!bPrerolled) {
 			bPrerolled = true;
-			SetRate(1.0f);
+			SetRate(CurrentRate);
 		}
 
 		if (hwaccel_retrieve_data && frame->format == hwAccelPixFmt) {
