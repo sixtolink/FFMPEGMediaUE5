@@ -316,7 +316,7 @@ void FFFMPEGMediaTracks::Initialize(AVFormatContext* ic, const FString& Url, con
 
 	const auto Settings = GetDefault<UFFMPEGMediaSettings>();
 	sychronizationType = Settings->SyncType;
-
+	DeferredEvents.Enqueue(EMediaEvent::PlaybackResumed);
 	readThread = LambdaFunctionRunnable::RunThreaded(TEXT("ReadThread"), [this] {
 		ReadThread();
 	});
@@ -1076,6 +1076,7 @@ EMediaStatus FFFMPEGMediaTracks::GetStatus() const
 }
 
 TRangeSet<float> FFFMPEGMediaTracks::GetSupportedRates(EMediaRateThinning Thinning) const {
+
 	TRangeSet<float> Result;
 
 	if (Thinning == EMediaRateThinning::Thinned)
@@ -1110,24 +1111,36 @@ bool FFFMPEGMediaTracks::SetLooping(bool Looping) {
 }
 
 bool FFFMPEGMediaTracks::SetRate(float Rate) {
+	
+
+	FScopeLock Lock(&CriticalSection);
 	CurrentRate = Rate;
-
-
 	if (bPrerolled) {
 		if (FMath::IsNearlyZero(Rate))
 		{
 			CurrentState = EMediaState::Paused;
 			DeferredEvents.Enqueue(EMediaEvent::PlaybackSuspended);
+            
+			// 显式调用时钟暂停
+			audclk.SetPaused(true);
+			vidclk.SetPaused(true);
+			extclk.SetPaused(true);
 		}
 		else
 		{
-			CurrentRate =1.0f;
+			// 确保速率被正确钳制
+			CurrentRate = FMath::Clamp(Rate, 0.0f, 1.0f);
 			CurrentState = EMediaState::Playing;
 			DeferredEvents.Enqueue(EMediaEvent::PlaybackResumed);
+            
+			// 恢复时钟
+			audclk.SetPaused(false);
+			vidclk.SetPaused(false);
+			extclk.SetPaused(false);
 
 		}
 	}
-
+	UE_LOG(LogFFMPEGMedia, Display, TEXT("SetRate to %.2f (Prerolled: %d)"), Rate, bPrerolled);
 	return true;
 }
 
@@ -2558,8 +2571,8 @@ int FFFMPEGMediaTracks::AudioRenderThread() {
 			RenderAudio();
 			int64_t endTime = av_gettime_relative();
 			int64_t dif = endTime - startTime;
-			if (dif < 33333) {
-				av_usleep(33333 - dif);
+			if (dif < 32333) {
+				av_usleep(32333 - dif);
 			}
 			startTime = endTime;
 		}
