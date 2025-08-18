@@ -75,6 +75,7 @@ void FFFMPEGMediaPlayer::Close()
 	// notify listeners
 	EventSink.ReceiveMediaEvent(EMediaEvent::TracksChanged);
 	EventSink.ReceiveMediaEvent(EMediaEvent::MediaClosed);
+    bOpen = false;
 }
 
 
@@ -151,7 +152,8 @@ bool FFFMPEGMediaPlayer::Open(const FString& Url, const IMediaOptions* Options, 
         TempUrl = Url;
         TempOptions = Options;
         TempPlayerOptions = PlayerOptions;
-        return false;
+        UE_LOG(LogFFMPEGMedia, Warning, TEXT("Player %p: Open called while already open"), this);
+        //return false;
     }
     bOpen = true;
     TimeLength = 0;
@@ -184,7 +186,7 @@ bool FFFMPEGMediaPlayer::Open(const TSharedRef<FArchive, ESPMode::ThreadSafe>& A
         TempUrl = OriginalUrl;
         TempOptions = nullptr;
         TempPlayerOptions = nullptr;
-        return false;
+        //return false;
     }
     bOpen = true;
     TimeLength = 0;
